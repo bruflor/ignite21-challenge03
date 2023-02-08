@@ -1,7 +1,7 @@
-import { createContext, ReactNode, useContext, useState } from 'react';
-import { toast } from 'react-toastify';
-import { api } from '../services/api';
-import { Product, Stock } from '../types';
+import { createContext, ReactNode, useContext, useState } from "react";
+import { toast } from "react-toastify";
+import { api } from "../services/api";
+import { Product, Stock } from "../types";
 
 interface CartProviderProps {
   children: ReactNode;
@@ -34,12 +34,14 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
   const addProduct = async (productId: number) => {
     try {
-      // TODO
-    } catch {
-      // TODO
+      const response = await api.get(`/products/${productId}`);
+      setCart((state) => [...state, response.data]);
+    } catch (err) {
+      console.log(err);
     }
   };
 
+  console.log("esse é o cart do useCart", cart);
   const removeProduct = (productId: number) => {
     try {
       // TODO
