@@ -66,9 +66,13 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
   const removeProduct = (productId: number) => {
     try {
-      // TODO
-    } catch {
-      // TODO
+      console.log("exclui esse", productId);
+      const cartWithoutDeleted = cart.filter(
+        (product) => product.id !== productId
+      );
+      setCart(cartWithoutDeleted);
+    } catch (error) {
+      console.log(error);
     }
   };
 
