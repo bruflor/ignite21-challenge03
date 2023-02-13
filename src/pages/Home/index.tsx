@@ -5,13 +5,14 @@ import { ProductList } from "./styles";
 import { api } from "../../services/api";
 import { formatPrice } from "../../util/format";
 import { useCart } from "../../hooks/useCart";
+import { Product } from "../../types";
 
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  image: string;
-}
+// interface Product {
+//   id: number;
+//   title: string;
+//   price: number;
+//   image: string;
+// }
 
 interface ProductFormatted extends Product {
   priceFormatted: string;
@@ -30,7 +31,7 @@ const Home = (): JSX.Element => {
     return sumAmount;
   }, {} as CartItemsAmount);
 
-  console.log(cartItemsAmount);
+  // console.log(cartItemsAmount);
 
   async function loadProducts() {
     const response = await api.get("/products");
