@@ -23,12 +23,12 @@ const Cart = (): JSX.Element => {
   // const cartFormatted = cart.map(product => ({
   //   // TODO
   // }))
-  // const total =
-  //   formatPrice(
-  //     cart.reduce((sumTotal, product) => {
-  //       // TODO
-  //     }, 0)
-  //   )
+  const total = formatPrice(
+    cart.reduce((sumTotal, product) => {
+      const totalPrice = sumTotal + product.price * product.amount;
+      return totalPrice;
+    }, 0)
+  );
 
   function handleProductIncrement(product: Product) {
     // TODO
@@ -57,7 +57,7 @@ const Cart = (): JSX.Element => {
         <tbody>
           {cart.map((product) => {
             return (
-              <tr data-testid="product" id={product.id.toString()}>
+              <tr data-testid="product" key={product.id.toString()}>
                 <td>
                   <img src={product.image} alt={product.title} />
                 </td>
@@ -159,7 +159,7 @@ const Cart = (): JSX.Element => {
 
         <Total>
           <span>TOTAL</span>
-          <strong>R$ 359,80</strong>
+          <strong>{total}</strong>
         </Total>
       </footer>
     </Container>

@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { api } from "../services/api";
 import { Product, Stock } from "../types";
@@ -30,6 +36,10 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     return [];
   });
 
+  useEffect(() => {
+    localStorage.setItem("@RocketShoes:cart", JSON.stringify([...cart]));
+  }, [cart]);
+
   const addProduct = async (productId: number) => {
     try {
       const responseProduct = await api
@@ -56,13 +66,11 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
       } else {
         throw new Error("Quantidade solicitada fora de estoque");
       }
-
-      localStorage.setItem("@RocketShoes:cart", JSON.stringify([...cart]));
+      // localStorage.setItem("@RocketShoes:cart", JSON.stringify([...cart]));
     } catch (error) {
       console.log(error);
     }
   };
-  console.log("this is my cart", cart);
 
   const removeProduct = (productId: number) => {
     try {
