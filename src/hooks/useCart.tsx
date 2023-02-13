@@ -32,12 +32,13 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
   const addProduct = async (productId: number) => {
     try {
-      const response = await api.get(`/products/${productId}`);
+      const responseProduct = await api.get(`/products/${productId}`);
+      const responseStock = await api.get(`/stock/${productId}`);
       const storagedCart = localStorage.getItem("@RocketShoes:cart");
       const onCart = cart.findIndex((element) => element.id === productId);
-      if (onCart) {
-        response.data["amount"] = 1;
-        setCart((state) => [...state, response.data]);
+      if (onCart === -1) {
+        responseProduct.data["amount"] = 1;
+        setCart((state) => [...state, responseProduct.data]);
         console.log("novo");
         // localStorage.setItem(
         //   "@RocketShoes:cart",
