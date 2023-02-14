@@ -5,7 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { api } from "../services/api";
 import { Product, Stock } from "../types";
 
@@ -36,37 +36,40 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     return [];
   });
 
-  useEffect(() => {
-    localStorage.setItem("@RocketShoes:cart", JSON.stringify([...cart]));
-  }, [cart]);
+  // useEffect(() => {
+  //   localStorage.setItem("@RocketShoes:cart", JSON.stringify([...cart]));
+  // }, [cart]);
 
   const addProduct = async (productId: number) => {
     try {
       const responseProduct = await api
         .get(`/products/${productId}`)
         .catch((error) => {
-          throw new Error("Erro na adição do produto");
+          toast.error("Erro na adição do produto");
         });
       const responseStock = await api
         .get(`/stock/${productId}`)
         .catch((error) => {
-          throw new Error("Erro na adição do produto");
+          toast.error("Erro na adição do produto");
         });
       const onCart = cart.findIndex((element) => element.id === productId);
 
-      if (onCart === -1) {
+      if (onCart === -1 && responseProduct?.status === 200) {
         responseProduct.data["amount"] = 1;
         setCart((state) => [...state, responseProduct.data]);
-        console.log("novo");
-      } else if (responseStock.data.amount > cart[onCart].amount) {
-        console.log("já tem desse");
+        localStorage.setItem("@RocketShoes:cart", JSON.stringify(cart));
+      } else if (
+        responseStock?.status === 200 &&
+        responseStock.data.amount > cart[onCart].amount
+      ) {
         const newCart = [...cart];
         newCart[onCart].amount = newCart[onCart].amount + 1;
         setCart(newCart);
+        localStorage.setItem("@RocketShoes:cart", JSON.stringify(cart));
       } else {
-        throw new Error("Quantidade solicitada fora de estoque");
+        toast.error("Quantidade solicitada fora de estoque");
+        // throw new Error("Quantidade solicitada fora de estoque");
       }
-      // localStorage.setItem("@RocketShoes:cart", JSON.stringify([...cart]));
     } catch (error) {
       console.log(error);
     }
@@ -74,13 +77,21 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
   const removeProduct = (productId: number) => {
     try {
-      console.log("exclui esse", productId);
-      const cartWithoutDeleted = cart.filter(
-        (product) => product.id !== productId
-      );
-      setCart(cartWithoutDeleted);
+      const onCart = cart.filter((product) => product.id === productId);
+      if (onCart.length >= 1) {
+        const cartWithoutDeleted = cart.filter(
+          (product) => product.id !== productId
+        );
+        setCart(cartWithoutDeleted);
+        localStorage.setItem(
+          "@RocketShoes:cart",
+          JSON.stringify(cartWithoutDeleted)
+        );
+      } else {
+        toast.error("Erro na remoção do produto");
+      }
     } catch (error) {
-      console.log(error);
+      toast.error("Erro na remoção do produto");
     }
   };
 
@@ -92,21 +103,19 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
       const responseStock = await api
         .get(`/stock/${productId}`)
         .catch((error) => {
-          throw new Error("Erro na adição do produto");
+          toast.error("Erro na alteração de quantidade do produto");
         });
-      if (amount <= responseStock.data.amount && amount >= 1) {
+      if (amount <= responseStock?.data.amount && amount >= 1) {
         const newCart = [...cart];
         const indexOnCart = cart.findIndex(
           (product) => product.id === productId
         );
         newCart[indexOnCart].amount = amount;
         setCart(newCart);
+        localStorage.setItem("@RocketShoes:cart", JSON.stringify(newCart));
       } else {
-        throw new Error("Erro na adição do produto");
+        toast.error("Quantidade solicitada fora de estoque");
       }
-      console.log(responseStock.data.amount);
-      console.log(amount);
-      // console.log(cart);
     } catch (error) {
       console.log(error);
     }
