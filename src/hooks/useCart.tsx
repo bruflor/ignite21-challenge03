@@ -89,9 +89,26 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     amount,
   }: UpdateProductAmount) => {
     try {
-      // TODO
-    } catch {
-      // TODO
+      const responseStock = await api
+        .get(`/stock/${productId}`)
+        .catch((error) => {
+          throw new Error("Erro na adição do produto");
+        });
+      if (amount <= responseStock.data.amount && amount >= 1) {
+        const newCart = [...cart];
+        const indexOnCart = cart.findIndex(
+          (product) => product.id === productId
+        );
+        newCart[indexOnCart].amount = amount;
+        setCart(newCart);
+      } else {
+        throw new Error("Erro na adição do produto");
+      }
+      console.log(responseStock.data.amount);
+      console.log(amount);
+      // console.log(cart);
+    } catch (error) {
+      console.log(error);
     }
   };
 
