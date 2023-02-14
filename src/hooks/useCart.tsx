@@ -56,8 +56,9 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
       if (onCart === -1 && responseProduct?.status === 200) {
         responseProduct.data["amount"] = 1;
-        setCart((state) => [...state, responseProduct.data]);
-        localStorage.setItem("@RocketShoes:cart", JSON.stringify(cart));
+        const newCart = [...cart, responseProduct.data];
+        setCart(newCart);
+        localStorage.setItem("@RocketShoes:cart", JSON.stringify(newCart));
       } else if (
         responseStock?.status === 200 &&
         responseStock.data.amount > cart[onCart].amount
@@ -65,7 +66,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
         const newCart = [...cart];
         newCart[onCart].amount = newCart[onCart].amount + 1;
         setCart(newCart);
-        localStorage.setItem("@RocketShoes:cart", JSON.stringify(cart));
+        localStorage.setItem("@RocketShoes:cart", JSON.stringify(newCart));
       } else {
         toast.error("Quantidade solicitada fora de estoque");
         // throw new Error("Quantidade solicitada fora de estoque");
