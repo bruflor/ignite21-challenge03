@@ -8,8 +8,8 @@ A web app made as a challenge on bootcamp Ignite by Rocketseat.
 
 ## Project Screenshots
 
-<img src="https://github.com/bruflor/ignite21-challenge03/blob/master/src/assets/screenshot1.png"/>
-<img src="https://github.com/bruflor/ignite21-challenge03/blob/master/src/assets/screenshot2.png"/>
+<img src="https://github.com/bruflor/ignite21-challenge03/blob/master/src/assets/Screenshot1.png"/>
+<img src="https://github.com/bruflor/ignite21-challenge03/blob/master/src/assets/Screenshot2.png"/>
 
 ## Process and objectives
 
